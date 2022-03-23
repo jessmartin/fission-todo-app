@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Fission Todo Example</title>
+    <meta
+      name="description"
+      content="Simple example of a Fission-based Todo application"
+    />
+    <meta name="author" content="Jess Martin" />
+
+    <meta property="og:title" content="Fission Todo Example" />
+    <meta property="og:type" content="website" />
+
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/webnative@latest/dist/index.umd.min.js"></script>
+    <script type="module" src="script.js"></script>
+  </head>
+
+  <body id="app">
+    <div class="container">
+      <h1>Todo List</h1>
+      <ul id="todoList"></ul>
+      <input
+        type="text"
+        placeholder="Do some stuff"
+        id="newTodo"
+        value=""
+      /><input type="submit" id="addTodo" value="Add Todo" />
+    </div>
+  </body>
+</html>
