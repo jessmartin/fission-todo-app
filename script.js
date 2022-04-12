@@ -52,17 +52,62 @@ switch (state.scenario) {
 // Load all the todos from the file system
 const fs = state.fs
 // Check if the file exists
-const bool = await fs.exists(wn.path.file("Documents", "Todos", "todo.json"))
+const bool = await fs.exists(wn.path.file("private", "Documents", "Todos", "todo.json"))
 
 // If the file doesn't exist, create it
 if (!bool) {
-  alert("no file");
+  const cid = await fs.write(
+    wn.path.file("private", "Documents", "Todos", "todo.json"),
+    '[{"title": "Build a thing", "checked": false, "todoId": "1"}]'
+  )
+
+  await fs.publish();
 }
 
 // If the file does exist, read it
 if (bool) {
-  alert("file exists");
+  const todoList = await fs.cat(
+    wn.path.file("private", "Documents", "Todos", "todo.json")
+  )
+
+  const todoListJson = JSON.parse(todoList);
+
+  // Add all the todo items
+  Object.entries(todoListJson).forEach(([index, todo]) => {
+    appendTodoElement(todo);
+  });
 }
 
-
 // Draw the todos to the screen
+function appendTodoElement({ title, todoId, checked }) {
+  const todoElement = document.createElement("li");
+  todoElement.id = todoId;
+  if (checked) todoElement.className = "checked";
+
+  todoElement.innerHTML = `
+      <input type="checkbox" class="todoCheck" ${checked ? 'checked' : ''}>
+      <span class="todoText">${title}</span>
+      <input class="todoEdit" hidden="true">
+    `;
+  todoElement.querySelector(".todoEdit").value = title;
+  document.getElementById("todoList").appendChild(todoElement);
+}
+
+function addTodo() {
+  const title = document.getElementById("newTodo").value;
+  if (!title) return;
+  newTodo.value = "";
+  appendTodoElement({ todoId: 1, title, checked: false });
+}
+
+function onKeyDown(event) {
+  const newTodo = document.getElementById("newTodo");
+
+  if (newTodo.focus && newTodo.value !== "" && event.code === "Enter") {
+    addTodo();
+  }
+}
+
+document.addEventListener('keydown', onKeyDown);
+const addTodoButton = document.getElementById("addTodo");
+addTodoButton.addEventListener('click', addTodo);
